@@ -1,0 +1,18 @@
+import { RegistrationOptions } from './registry';
+import { Factory } from './factory';
+
+// TODO - use symbol
+export const OWNER = '__owner__';
+
+export function getOwner(object: Object): Owner {
+  return object[OWNER];
+}
+
+export function setOwner(object: Object, owner: Owner): void {
+  object[OWNER] = owner;
+}
+
+export interface Owner {
+  factoryFor(specifier: string, referrer?: string): Factory<any>;
+  lookup(specifier: string, referrer?: string): any;
+}
