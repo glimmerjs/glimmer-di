@@ -1,4 +1,4 @@
-const build = require('glimmer-build');
+const build = require('@glimmer/build');
 
 module.exports = build({
   testDependencies: [
