@@ -36,7 +36,7 @@
     "babel-plugin-transform-proto-to-assign": "^6.9.0",
     "broccoli": "^1.1.0",
     "broccoli-cli": "^1.0.0",
-    "glimmer-build": "^0.1.4",
+    "@glimmer/build": "^0.1.6",
     "glimmer-engine": "^0.18.1",
     "testem": "^1.13.0"
   }
