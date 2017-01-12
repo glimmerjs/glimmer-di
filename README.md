@@ -9,15 +9,12 @@ and consistency of your code.
 
 The three key ideas are:
 
-1. An object's dependencies should be provided to the object when it is created,
-   rather than hardcoded.
+1. An object's dependencies (that is, the other objects it needs to do its job)
+   should be provided to the object when it is created, rather than hard-coded.
 2. A dependency may have multiple implementations, so long as each
    implementation adheres to an agreed-upon interface.
 3. An object using a dependency shouldn't care where on the filesystem that
    dependency comes from.
-
-When we talk about an object's dependencies, we just mean the other objects that
-it relies on to do its job.
 
 Let's look at a short example that **does not** use dependency injection. We'll
 write a hypothetical server that renders a short HTML document when an incoming
@@ -49,11 +46,12 @@ work today, but if we wanted to support HTTP/3 in the future, we'd have to come
 back and add a new configuration option for every new protocol.
 
 What if, instead of telling the server what protocol to use, we could instead
-provide it with an object that encapsulated all of those concerns? Instead of
-having our `HelloWorldServer` import an `HTTPServer` directly, we can provide it
-with a pre-configured object that implements the same interface. (In this case,
-any object that emits a `'request'` event and supports adding an event listener
-with the `on()` method.)
+provide it with an object that encapsulated all of those concerns?
+
+Instead of having our `HelloWorldServer` import and instantiate `HTTPServer`
+directly, we can provide it with an object that we guarantee implements the same
+interface. In this case, that means any object that emits a `'request'` event
+and supports adding an event listener with the `on()` method.
 
 Let's look at what that updated example might look like:
 
@@ -129,8 +127,8 @@ Here's how to remember the role of each:
 2. The `Container` **contains** objects, and is where you request instances of
    registered classes.
 
-If that sounds confusing, let's look at a simple example that should make it
-clear.
+If that sounds confusing, let's look at an example that should make it
+clearer.
 
 Let's say I have a class for a UI component that I want to make available to the
 system. The first thing I would do is create a new `Registry` instance and tell
@@ -178,9 +176,12 @@ let component2 = container.lookup('component:profile');
 component1 === component2; // => true
 ```
 
-You can create many instances of the same component in one app. So in this case,
-we want to change the default behavior and tell the registry that we should
-always get a _new_ instance when we call `lookup('component:profile')`:
+But that's not the behavior we want: in an app, you need to be able to create
+many instances of the same component.
+
+In this case, we want to change the default behavior and tell the registry that
+we should always get a _new_ instance when we call
+`lookup('component:profile')`:
 
 ```js
 registry.registerOption('component:profile', 'singleton', false);
