@@ -34,7 +34,7 @@
     "babel-plugin-transform-es2015-spread": "^6.8.0",
     "babel-plugin-transform-es2015-template-literals": "^6.8.0",
     "babel-plugin-transform-proto-to-assign": "^6.9.0",
-    "glimmer-build": "^0.1.2",
+    "glimmer-build": "^0.1.3",
     "glimmer-engine": "^0.18.1"
   }
 }
