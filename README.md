@@ -1,4 +1,4 @@
-# glimmer-di
+# glimmer-di [![Build Status](https://secure.travis-ci.org/glimmerjs/glimmer-di.svg?branch=master)](http://travis-ci.org/glimmerjs/glimmer-di)
 
 Dependency injection for Glimmer applications.
 
