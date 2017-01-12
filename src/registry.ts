@@ -61,7 +61,7 @@ export default class Registry {
   registeredOptions(specifier: string): any {
     let options = this._registeredOptions[specifier];
     if (options === undefined) {
-      let type = specifier.split(':')[0];
+      let [type] = specifier.split(':');
       options = this._registeredOptions[type];
     }
     return options;
@@ -87,7 +87,7 @@ export default class Registry {
   }
 
   registeredInjections(specifier: string): Injection[] {
-    let type = specifier.split(':')[0];
+    let [type] = specifier.split(':');
     let injections: Injection[] = [];
     Array.prototype.push.apply(injections, this._registeredInjections[type]);
     Array.prototype.push.apply(injections, this._registeredInjections[specifier]);
