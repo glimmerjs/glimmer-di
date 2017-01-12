@@ -19,6 +19,7 @@
     "glimmer-util": "^0.5.3"
   },
   "devDependencies": {
+    "@glimmer/build": "^0.1.6",
     "babel-plugin-check-es2015-constants": "^6.8.0",
     "babel-plugin-external-helpers-2": "^6.3.13",
     "babel-plugin-feature-flags": "^0.3.0",
@@ -36,7 +37,6 @@
     "babel-plugin-transform-proto-to-assign": "^6.9.0",
     "broccoli": "^1.1.0",
     "broccoli-cli": "^1.0.0",
-    "@glimmer/build": "^0.1.6",
     "glimmer-engine": "^0.18.1",
     "testem": "^1.13.0"
   }
