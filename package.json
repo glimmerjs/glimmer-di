@@ -8,8 +8,9 @@
   ],
   "repository": "https://github.com/glimmerjs/glimmer-di",
   "license": "MIT",
-  "main": "dist/glimmer-di/index.js",
-  "typings": "dist/glimmer-di/index.d.ts",
+  "main": "dist/commonjs/es2017/index.js",
+  "module": "dist/modules/es2017/index.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && BROCCOLI_ENV=dist broccoli build dist",
     "build:tests": "rm -rf tests && BROCCOLI_ENV=tests broccoli build tests",
@@ -20,11 +21,10 @@
     "glimmer-util": "^0.5.3"
   },
   "devDependencies": {
-    "@glimmer/build": "^0.1.7",
+    "@glimmer/build": "^0.1.9",
     "broccoli": "^1.1.0",
     "broccoli-cli": "^1.0.0",
     "glimmer-engine": "^0.18.1",
-    "testem": "^1.13.0",
-    "typescript": "^2.1.5"
+    "testem": "^1.13.0"
   }
 }
