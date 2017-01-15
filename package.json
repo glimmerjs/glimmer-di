@@ -20,7 +20,7 @@
     "glimmer-util": "^0.5.3"
   },
   "devDependencies": {
-    "@glimmer/build": "^0.1.6",
+    "@glimmer/build": "^0.1.7",
     "broccoli": "^1.1.0",
     "broccoli-cli": "^1.0.0",
     "glimmer-engine": "^0.18.1",
