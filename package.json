@@ -8,8 +8,9 @@
   ],
   "repository": "https://github.com/glimmerjs/glimmer-di",
   "license": "MIT",
-  "main": "dist/glimmer-di/index.js",
-  "typings": "dist/glimmer-di/index.d.ts",
+  "main": "dist/commonjs/es2017/index.js",
+  "module": "dist/modules/es2017/index.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && BROCCOLI_ENV=dist broccoli build dist",
     "build:tests": "rm -rf tests && BROCCOLI_ENV=tests broccoli build tests",
