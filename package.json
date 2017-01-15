@@ -13,7 +13,7 @@
   "scripts": {
     "build": "rm -rf dist && BROCCOLI_ENV=dist broccoli build dist",
     "build:tests": "rm -rf tests && BROCCOLI_ENV=tests broccoli build tests",
-    "prepublish": "rm -rf dist && BROCCOLI_ENV=dist broccoli build dist",
+    "preversion": "rm -rf dist && BROCCOLI_ENV=dist broccoli build dist",
     "test": "testem ci"
   },
   "dependencies": {
