@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es2017",
     "module": "es2015",
     "moduleResolution": "node",
     "experimentalDecorators": true,
@@ -8,7 +8,7 @@
     "inlineSourceMap": true,
     "declaration": true,
     "newLine": "LF",
-    "outDir": "dist/glimmer-di"
+    "outDir": "dist"
   },
   "include": [
     "src/**/*.ts"
