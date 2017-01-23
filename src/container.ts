@@ -1,7 +1,7 @@
 import { Factory } from './factory';
 import Registry, { Injection } from './registry';
 import { Resolver } from './resolver';
-import { dict, Dict } from 'glimmer-util';
+import { dict, Dict } from '@glimmer/util';
 
 export default class Container {
   private _registry: Registry;

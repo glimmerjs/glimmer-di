@@ -18,7 +18,7 @@
     "test": "testem ci"
   },
   "dependencies": {
-    "glimmer-util": "^0.5.3"
+    "@glimmer/util": "^0.21.0"
   },
   "devDependencies": {
     "@glimmer/build": "^0.1.10",

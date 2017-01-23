@@ -1,4 +1,4 @@
-import { dict, Dict } from 'glimmer-util';
+import { dict, Dict } from '@glimmer/util';
 import { Factory } from './factory';
 
 export interface RegistrationOptions {
@@ -92,5 +92,5 @@ export default class Registry {
     Array.prototype.push.apply(injections, this._registeredInjections[type]);
     Array.prototype.push.apply(injections, this._registeredInjections[specifier]);
     return injections;
-  }  
+  }
 }
