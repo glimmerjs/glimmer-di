@@ -1,10 +1,14 @@
+"use strict";
+
 const build = require('@glimmer/build');
-const path = require('path');
+const buildVendorPackage = require('@glimmer/build/lib/build-vendor-package');
 
-const glimmerEnginePath = path.dirname(require.resolve('glimmer-engine/package'));
+let buildOptions = {};
 
-module.exports = build({
-  testDependencies: [
-    path.join(glimmerEnginePath, 'dist/amd/glimmer-common.amd.js')
-  ]
-});
+if (process.env.BROCCOLI_ENV === 'tests') {
+  buildOptions.vendorTrees = [
+    buildVendorPackage('@glimmer/util')
+  ];
+}
+
+module.exports = build(buildOptions);
