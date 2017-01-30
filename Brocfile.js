@@ -7,7 +7,7 @@ let buildOptions = {};
 
 if (process.env.BROCCOLI_ENV === 'tests') {
   buildOptions.vendorTrees = [
-    buildVendorPackage('@glimmer/util')
+    buildVendorPackage('@glimmer/util', { external: ['babel-helpers'] }),
   ];
 }
 
