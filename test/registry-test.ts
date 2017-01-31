@@ -25,7 +25,7 @@ test('#register - can register options together with a factory', function(assert
   class Foo {
     static create() { return { foo: 'bar' }; }
   }
-  
+
   let registry = new Registry();
 
   assert.strictEqual(registry.registration('foo:bar'), undefined, 'factory has not yet been registered');
@@ -43,6 +43,19 @@ test('#registration - returns a factory has been registered', function(assert) {
 
   assert.strictEqual(registry.registration('foo:bar'), undefined, 'factory has not yet been registered');
   registry.register('foo:bar', Foo);
+  assert.strictEqual(registry.registration('foo:bar'), Foo, 'factory has been registered');
+});
+
+test('#registration - returns a factory has been registered in a fallback', function(assert) {
+  class Foo {
+    static create() { return { foo: 'bar' }; }
+  }
+
+  let fallbackRegistry = new Registry();
+  let registry = new Registry({fallback: fallbackRegistry});
+
+  assert.strictEqual(registry.registration('foo:bar'), undefined, 'factory has not yet been registered');
+  fallbackRegistry.register('foo:bar', Foo);
   assert.strictEqual(registry.registration('foo:bar'), Foo, 'factory has been registered');
 });
 

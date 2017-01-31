@@ -15,11 +15,15 @@ export default class Registry {
   private _registrations: Dict<Factory<any>>;
   private _registeredOptions: Dict<any>;
   private _registeredInjections: Dict<Injection[]>;
+  private _fallback: Registry;
 
-  constructor() {
+  constructor(options?: { fallback?: Registry }) {
     this._registrations = dict<any>();
     this._registeredOptions = dict<any>();
     this._registeredInjections = dict<Injection[]>();
+    if (options && options.fallback) {
+      this._fallback = options.fallback;
+    }
   }
 
   register(specifier: string, factory: any, options?: RegistrationOptions): void {
@@ -30,7 +34,11 @@ export default class Registry {
   }
 
   registration(specifier: string): any {
-    return this._registrations[specifier];
+    let registration = this._registrations[specifier];
+    if (this._fallback && registration === undefined) {
+      registration = this._fallback.registration(specifier);
+    }
+    return registration;
   }
 
   unregister(specifier: string): void {
