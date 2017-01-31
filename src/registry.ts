@@ -26,17 +26,25 @@ export interface RegistryReader {
   registeredInjections(specifier: string): Injection[];
 }
 
+export interface RegistryOptions {
+  fallback?: RegistryReader;
+}
+
 export interface RegistryAccessor extends RegistryReader, RegistryWriter {}
 
 export default class Registry implements RegistryAccessor {
   private _registrations: Dict<FactoryDefinition<any>>;
   private _registeredOptions: Dict<any>;
   private _registeredInjections: Dict<Injection[]>;
+  private _fallback: RegistryReader;
 
-  constructor() {
+  constructor(options?: RegistryOptions) {
     this._registrations = {};
     this._registeredOptions = {};
     this._registeredInjections = {};
+    if (options && options.fallback) {
+      this._fallback = options.fallback;
+    }
   }
 
   register(specifier: string, factoryDefinition: FactoryDefinition<any>, options?: RegistrationOptions): void {
@@ -47,7 +55,11 @@ export default class Registry implements RegistryAccessor {
   }
 
   registration(specifier: string): FactoryDefinition<any> {
-    return this._registrations[specifier];
+    let registration = this._registrations[specifier];
+    if (registration === undefined && this._fallback) {
+      registration = this._fallback.registration(specifier);
+    }
+    return registration;
   }
 
   unregister(specifier: string): void {
