@@ -13,6 +13,9 @@ export function setOwner(object: Object, owner: Owner): void {
 }
 
 export interface Owner {
+  identify(specifier: string, referrer?: string): string;
+
   factoryFor(specifier: string, referrer?: string): Factory<any>;
+  
   lookup(specifier: string, referrer?: string): any;
 }
