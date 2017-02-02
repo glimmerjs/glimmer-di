@@ -6,6 +6,8 @@ const { module, test } = QUnit;
 module('Owner');
 
 class Application implements Owner {
+  identify(specifier: string, referrer?: string): string {}
+
   factoryFor(specifier: string, referrer?: string): Factory<any> {
     return {
       create(injections?: Object) {
