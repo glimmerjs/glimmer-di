@@ -11,7 +11,24 @@ export interface Injection {
   source: string
 }
 
-export default class Registry {
+export interface RegistryWriter {
+  register(specifier: string, factory: any, options?: RegistrationOptions): void;
+  unregister(specifier: string): void;
+  registerOption(specifier: string, option: string, value: any): void;
+  unregisterOption(specifier: string, option: string): void;
+  registerInjection(specifier: string, property: string, source: string): void;
+}
+
+export interface RegistryReader {
+  registration(specifier: string): any;
+  registeredOption(specifier: string, option: string): any;
+  registeredOptions(specifier: string): any;
+  registeredInjections(specifier: string): Injection[];
+}
+
+export interface RegistryAccessor extends RegistryReader, RegistryWriter {}
+
+export default class Registry implements RegistryAccessor {
   private _registrations: Dict<Factory<any>>;
   private _registeredOptions: Dict<any>;
   private _registeredInjections: Dict<Injection[]>;
