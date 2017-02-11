@@ -1,5 +1,6 @@
 import { dict, Dict } from '@glimmer/util';
 import { Factory } from './factory';
+import { FactoryDefinition } from './factory-definition';
 
 export interface RegistrationOptions {
   singleton?: boolean;
@@ -29,24 +30,24 @@ export interface RegistryReader {
 export interface RegistryAccessor extends RegistryReader, RegistryWriter {}
 
 export default class Registry implements RegistryAccessor {
-  private _registrations: Dict<Factory<any>>;
+  private _registrations: Dict<FactoryDefinition<any>>;
   private _registeredOptions: Dict<any>;
   private _registeredInjections: Dict<Injection[]>;
 
   constructor() {
-    this._registrations = dict<any>();
+    this._registrations = dict<FactoryDefinition<any>>();
     this._registeredOptions = dict<any>();
     this._registeredInjections = dict<Injection[]>();
   }
 
-  register(specifier: string, factory: any, options?: RegistrationOptions): void {
-    this._registrations[specifier] = factory;
+  register(specifier: string, factoryDefinition: FactoryDefinition<any>, options?: RegistrationOptions): void {
+    this._registrations[specifier] = factoryDefinition;
     if (options) {
       this._registeredOptions[specifier] = options;
     }
   }
 
-  registration(specifier: string): any {
+  registration(specifier: string): FactoryDefinition<any> {
     return this._registrations[specifier];
   }
 

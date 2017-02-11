@@ -1,3 +1,4 @@
+import { FactoryDefinition } from './factory-definition';
 import { Factory } from './factory';
 import { RegistryReader, Injection } from './registry';
 import { Resolver } from './resolver';
@@ -7,33 +8,33 @@ export default class Container {
   private _registry: RegistryReader;
   private _resolver: Resolver;
   private _lookups: Dict<any>;
-  private _factoryLookups: Dict<any>;
+  private _factoryDefinitionLookups: Dict<FactoryDefinition<any>>;
 
   constructor(registry: RegistryReader, resolver: Resolver = null) {
     this._registry = registry;
     this._resolver = resolver;
     this._lookups = dict<any>();
-    this._factoryLookups = dict<any>();
+    this._factoryDefinitionLookups = dict<FactoryDefinition<any>>();
   }
 
   factoryFor(specifier: string): Factory<any> {
-    let factory = this._factoryLookups[specifier];
+    let factoryDefinition: FactoryDefinition<any> = this._factoryDefinitionLookups[specifier];
 
-    if (!factory) {
+    if (!factoryDefinition) {
       if (this._resolver) {
-        factory = this._resolver.retrieve(specifier);
+        factoryDefinition = this._resolver.retrieve(specifier);
       }
 
-      if (!factory) {
-        factory = this._registry.registration(specifier);
+      if (!factoryDefinition) {
+        factoryDefinition = this._registry.registration(specifier);
       }
 
-      if (factory) {
-        this._factoryLookups[specifier] = factory;
+      if (factoryDefinition) {
+        this._factoryDefinitionLookups[specifier] = factoryDefinition;
       }
     }
 
-    return factory;
+    return this.buildFactory(specifier, factoryDefinition);
   }
 
   lookup(specifier: string): any {
@@ -47,12 +48,10 @@ export default class Container {
     if (!factory) { return; }
 
     if (this._registry.registeredOption(specifier, 'instantiate') === false) {
-      return factory;
+      return factory.class;
     }
 
-    let injections = this.buildInjections(specifier);
-
-    let object = factory.create(injections);
+    let object = factory.create();
 
     if (singleton && object) {
       this._lookups[specifier] = object;
@@ -61,11 +60,11 @@ export default class Container {
     return object;
   }
 
-  defaultInjections(specifier: string): Object {
+  private defaultInjections(specifier: string): Object {
     return {};
   }
 
-  buildInjections(specifier: string): Object {
+  private buildInjections(specifier: string): Object {
     let hash = this.defaultInjections(specifier);
     let injections: Injection[] = this._registry.registeredInjections(specifier);
     let injection: Injection;
@@ -76,5 +75,18 @@ export default class Container {
     }
 
     return hash;
+  }
+
+  private buildFactory(specifier: string, factoryDefinition: FactoryDefinition<any>): Factory<any> {
+    let injections = this.buildInjections(specifier);
+
+    return {
+      class: factoryDefinition,
+      create(options) {
+        let mergedOptions = Object.assign({}, injections, options);
+
+        return factoryDefinition.create(mergedOptions);
+      }
+    }
   }
 }
