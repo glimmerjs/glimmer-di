@@ -12,22 +12,82 @@ test('can be instantiated with a registry', function(assert) {
   assert.ok(registry, 'container has been created');
 });
 
-test('#factoryFor - returns a registered factory', function(assert) {
+test('#factoryFor - returns an object that creates the registered class', function(assert) {
   class Foo {
-    static create() { return { foo: 'bar' }; }
+    static create() { return new this(); }
   }
 
   let registry = new Registry();
   let container = new Container(registry);
-  registry.register('foo:bar', Foo);
-  assert.strictEqual(container.factoryFor('foo:bar'), Foo, 'expected factory was returned');
+
+  registry.register('thing:foo', Foo);
+
+  assert.ok(container.factoryFor('thing:foo').create() instanceof Foo, 'expected factory was returned');
+});
+
+test('#factoryFor - returns an object that creates the registered class with injections', function(assert) {
+  class Foo {
+    static create(options: Object) { return new this(options); }
+    constructor(options: Object) { Object.assign(this, options); }
+  }
+
+  let registry = new Registry();
+  let container = new Container(registry);
+  let fooInstance;
+
+  registry.register('thing:foo', Foo);
+  registry.register('widget:main', 'widget');
+  registry.registerInjection('thing', 'widget', 'widget:main');
+  registry.registerOption('widget:main', 'instantiate', false);
+
+  fooInstance = container.factoryFor('thing:foo').create();
+
+  assert.equal(fooInstance.widget, 'widget', 'dependencies are injected');
+});
+
+test('#factoryFor - returns an object that creates the registered class with give properties', function(assert) {
+  class Foo {
+    static create(options: Object) { return new this(options); }
+    constructor(options: Object) { Object.assign(this, options); }
+  }
+
+  let registry = new Registry();
+  let container = new Container(registry);
+  let fooInstance;
+
+  registry.register('thing:foo', Foo);
+
+  fooInstance = container.factoryFor('thing:foo').create({ bar: 'bar' });
+
+  assert.equal(fooInstance.bar, 'bar', 'properties are assigned');
+});
+
+test('#factoryFor - merges given properties with injections', function(assert) {
+  class Foo {
+    static create(options: Object) { return new this(options); }
+    constructor(options: Object) { Object.assign(this, options); }
+  }
+
+  let registry = new Registry();
+  let container = new Container(registry);
+  let fooInstance;
+
+  registry.register('thing:foo', Foo);
+  registry.register('widget:main', 'widget');
+  registry.registerInjection('thing', 'widget', 'widget:main');
+  registry.registerOption('widget:main', 'instantiate', false);
+
+  fooInstance = container.factoryFor('thing:foo').create({ bar: 'bar' });
+
+  assert.equal(fooInstance.widget, 'widget', 'dependencies are injected');
+  assert.equal(fooInstance.bar, 'bar', 'properties are assigned');
 });
 
 test('#factoryFor - will use a resolver to locate a factory', function(assert) {
   assert.expect(2);
 
   class Foo {
-    static create() { return { foo: 'bar' }; }
+    static create() { return new this(); }
   }
 
   class FakeResolver implements Resolver {
@@ -44,18 +104,18 @@ test('#factoryFor - will use a resolver to locate a factory', function(assert) {
   let resolver = new FakeResolver();
   let registry = new Registry();
   let container = new Container(registry, resolver);
-  assert.strictEqual(container.factoryFor('foo:bar'), Foo, 'expected factory was returned');
+  assert.strictEqual(container.factoryFor('foo:bar').class, Foo, 'expected factory was returned');
 });
 
 test('#factoryFor - will use a resolver to locate a factory, even if one is registered locally', function(assert) {
   assert.expect(2);
 
   class Foo {
-    static create() { return { foo: 'bar' }; }
+    static create() { return new this(); }
   }
 
   class FooBar {
-    static create() { return { foo: 'bar' }; }
+    static create() { return new this(); }
   }
 
   class FakeResolver implements Resolver {
@@ -75,7 +135,7 @@ test('#factoryFor - will use a resolver to locate a factory, even if one is regi
 
   registry.register('foo:bar', Foo);
 
-  assert.strictEqual(container.factoryFor('foo:bar'), FooBar, 'factory from resolver was returned');
+  assert.strictEqual(container.factoryFor('foo:bar').class, FooBar, 'factory from resolver was returned');
 });
 
 test('#lookup - returns an instance created by the factory with a set of default injections', function(assert) {
