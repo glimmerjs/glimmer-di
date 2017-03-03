@@ -1,4 +1,6 @@
-import { FactoryDefinition } from './factory-definition';
+export interface FactoryDefinition<T> {
+  create(injections?: Object): T;
+}
 
 export interface Factory<T> {
   class: FactoryDefinition<T>;
