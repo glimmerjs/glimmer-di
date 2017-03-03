@@ -1,6 +1,5 @@
 import { dict, Dict } from '@glimmer/util';
-import { Factory } from './factory';
-import { FactoryDefinition } from './factory-definition';
+import { Factory, FactoryDefinition } from './factory';
 
 export interface RegistrationOptions {
   singleton?: boolean;

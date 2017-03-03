@@ -1,4 +1,4 @@
-import { FactoryDefinition } from './factory-definition';
+import { FactoryDefinition } from './factory';
 
 export interface Resolver {
   identify(specifier: string, referrer?: string): string;

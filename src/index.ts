@@ -1,5 +1,5 @@
 export { default as Container } from './container';
-export { Factory } from './factory';
+export * from './factory';
 export { 
   RegistryReader,
   RegistryWriter,

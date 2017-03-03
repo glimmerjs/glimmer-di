@@ -1,5 +1,4 @@
-import { FactoryDefinition } from './factory-definition';
-import { Factory } from './factory';
+import { Factory, FactoryDefinition } from './factory';
 import { RegistryReader, Injection } from './registry';
 import { Resolver } from './resolver';
 import { dict, Dict } from '@glimmer/util';
