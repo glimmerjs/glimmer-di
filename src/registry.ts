@@ -1,4 +1,4 @@
-import { dict, Dict } from '@glimmer/util';
+import { Dict } from './dict';
 import { Factory, FactoryDefinition } from './factory';
 
 export interface RegistrationOptions {
@@ -34,9 +34,9 @@ export default class Registry implements RegistryAccessor {
   private _registeredInjections: Dict<Injection[]>;
 
   constructor() {
-    this._registrations = dict<FactoryDefinition<any>>();
-    this._registeredOptions = dict<any>();
-    this._registeredInjections = dict<Injection[]>();
+    this._registrations = {};
+    this._registeredOptions = {};
+    this._registeredInjections = {};
   }
 
   register(specifier: string, factoryDefinition: FactoryDefinition<any>, options?: RegistrationOptions): void {

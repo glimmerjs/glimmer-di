@@ -1,7 +1,7 @@
 import { Factory, FactoryDefinition } from './factory';
 import { RegistryReader, Injection } from './registry';
 import { Resolver } from './resolver';
-import { dict, Dict } from '@glimmer/util';
+import { Dict } from './dict';
 
 export default class Container {
   private _registry: RegistryReader;
@@ -12,8 +12,8 @@ export default class Container {
   constructor(registry: RegistryReader, resolver: Resolver = null) {
     this._registry = registry;
     this._resolver = resolver;
-    this._lookups = dict<any>();
-    this._factoryDefinitionLookups = dict<FactoryDefinition<any>>();
+    this._lookups = {};
+    this._factoryDefinitionLookups = {};
   }
 
   factoryFor(specifier: string): Factory<any> {

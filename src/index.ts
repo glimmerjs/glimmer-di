@@ -1,4 +1,5 @@
 export { default as Container } from './container';
+export * from './dict';
 export * from './factory';
 export { 
   RegistryReader,
