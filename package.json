@@ -17,9 +17,6 @@
     "preversion": "rm -rf dist && BROCCOLI_ENV=dist broccoli build dist",
     "test": "testem ci"
   },
-  "dependencies": {
-    "@glimmer/util": "^0.21.0"
-  },
   "devDependencies": {
     "@glimmer/build": "^0.2.1",
     "broccoli": "^1.1.0",
