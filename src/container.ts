@@ -59,7 +59,7 @@ export default class Container {
     return object;
   }
 
-  private defaultInjections(specifier: string): Object {
+  defaultInjections(specifier: string): Object {
     return {};
   }
 
