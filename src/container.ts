@@ -33,6 +33,10 @@ export default class Container {
       }
     }
 
+    if (!factoryDefinition) {
+      return;
+    }
+
     return this.buildFactory(specifier, factoryDefinition);
   }
 

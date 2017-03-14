@@ -45,6 +45,16 @@ test('#factoryFor - returns an object that creates the registered class with inj
   assert.equal(fooInstance.widget, 'widget', 'dependencies are injected');
 });
 
+test('#factoryFor - returns undefined when factory is not registered or resolved', function(assert) {
+  assert.expect(1);
+
+  let registry = new Registry();
+  let container = new Container(registry);
+
+  let foobar = container.factoryFor('foo:bar');
+  assert.strictEqual(foobar, undefined, 'factory is undefined');
+});
+
 test('#factoryFor - returns an object that creates the registered class with give properties', function(assert) {
   class Foo {
     static create(options: Object) { return new this(options); }
@@ -160,6 +170,16 @@ test('#lookup - returns an instance created by the factory with a set of default
   registry.register('foo:bar', Foo);
   let foobar = container.lookup('foo:bar');
   assert.strictEqual(foobar, instance, 'instance created');
+});
+
+test('#lookup - returns undefined when factory is not registered or resolved', function(assert) {
+  assert.expect(1);
+
+  let registry = new Registry();
+  let container = new Container(registry);
+
+  let foobar = container.lookup('foo:bar');
+  assert.strictEqual(foobar, undefined, 'instance is undefined');
 });
 
 test('#lookup - caches looked up instances by default', function(assert) {
