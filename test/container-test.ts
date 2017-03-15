@@ -45,6 +45,27 @@ test('#factoryFor - returns an object that creates the registered class with inj
   assert.equal(fooInstance.widget, 'widget', 'dependencies are injected');
 });
 
+test('#factoryFor - returns an object that creates the registered class with injections from fallback registry', function(assert) {
+  class Foo {
+    static create(options: Object) { return new this(options); }
+    constructor(options: Object) { Object.assign(this, options); }
+  }
+
+  let baseRegistry = new Registry();
+  let chainedRegistry = new Registry({ fallback: baseRegistry });
+  let container = new Container(chainedRegistry);
+  let fooInstance;
+
+  chainedRegistry.register('thing:foo', Foo);
+  baseRegistry.register('widget:main', 'widget');
+  baseRegistry.registerInjection('thing', 'widget', 'widget:main');
+  baseRegistry.registerOption('widget:main', 'instantiate', false);
+
+  fooInstance = container.factoryFor('thing:foo').create();
+
+  assert.equal(fooInstance.widget, 'widget', 'dependencies are injected');
+});
+
 test('#factoryFor - returns an object that creates the registered class with give properties', function(assert) {
   class Foo {
     static create(options: Object) { return new this(options); }

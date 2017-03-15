@@ -92,6 +92,25 @@ test('#registerOption, #registeredOptions, #registeredOption, #unregisterOption'
   assert.strictEqual(registry.registeredOption('foo:bar', 'singleton'), undefined);
 });
 
+test('#registeredOption fallback', function(assert) {
+  let baseRegistry = new Registry();
+  let chainedRegistry = new Registry({fallback: baseRegistry});
+
+  assert.strictEqual(chainedRegistry.registeredOption('foo:bar', 'singleton'), undefined);
+
+  baseRegistry.registerOption('foo:bar', 'singleton', true);
+  assert.strictEqual(chainedRegistry.registeredOption('foo:bar', 'singleton'), true);
+
+  chainedRegistry.registerOption('foo:bar', 'singleton', false);
+  assert.strictEqual(chainedRegistry.registeredOption('foo:bar', 'singleton'), false);
+
+  chainedRegistry.unregisterOption('foo:bar', 'singleton');
+  assert.strictEqual(chainedRegistry.registeredOption('foo:bar', 'singleton'), true);
+
+  baseRegistry.unregisterOption('foo:bar', 'singleton');
+  assert.strictEqual(chainedRegistry.registeredOption('foo:bar', 'singleton'), undefined);
+});
+
 test('Options registered by full name supercede those registered by type', function(assert) {
   class Foo {
     static create() { return { foo: 'bar' }; }
@@ -105,4 +124,14 @@ test('Options registered by full name supercede those registered by type', funct
   assert.strictEqual(registry.registeredOption('foo:bar', 'singleton'), false);
   registry.registerOption('foo:bar', 'singleton', true);
   assert.strictEqual(registry.registeredOption('foo:bar', 'singleton'), true);
+});
+
+test('Options registered by type on chained registry supercede those by type on the base', function(assert) {
+  let baseRegistry = new Registry();
+  let chainedRegistry = new Registry({fallback: baseRegistry});
+
+  baseRegistry.registerOption('foo:bar', 'singleton', true);
+  chainedRegistry.registerOption('foo', 'singleton', false);
+
+  assert.strictEqual(chainedRegistry.registeredOption('foo:bar', 'singleton'), false);
 });
