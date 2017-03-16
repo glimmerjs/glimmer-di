@@ -3,10 +3,15 @@ import { RegistryReader, Injection } from './registry';
 import { Resolver } from './resolver';
 import { Dict } from './dict';
 
+interface Lookup {
+  factory: Factory<any>;
+  instance: any;
+}
+
 export default class Container {
   private _registry: RegistryReader;
   private _resolver: Resolver;
-  private _lookups: Dict<any>;
+  private _lookups: Dict<Lookup>;
   private _factoryDefinitionLookups: Dict<FactoryDefinition<any>>;
 
   constructor(registry: RegistryReader, resolver: Resolver = null) {
@@ -43,8 +48,11 @@ export default class Container {
   lookup(specifier: string): any {
     let singleton = (this._registry.registeredOption(specifier, 'singleton') !== false);
 
-    if (singleton && this._lookups[specifier]) {
-      return this._lookups[specifier];
+    if (singleton) {
+      let lookup = this._lookups[specifier];
+      if (lookup) {
+        return lookup.instance;
+      }
     }
 
     let factory = this.factoryFor(specifier);
@@ -54,17 +62,30 @@ export default class Container {
       return factory.class;
     }
 
-    let object = factory.create();
+    let instance = factory.create();
 
-    if (singleton && object) {
-      this._lookups[specifier] = object;
+    if (singleton && instance) {
+      this._lookups[specifier] = { factory, instance };
     }
 
-    return object;
+    return instance;
   }
 
   defaultInjections(specifier: string): Object {
     return {};
+  }
+
+  teardown(): void {
+    let specifiers = Object.keys(this._lookups);
+
+    for (let i=0;i<specifiers.length;i++) {
+      let specifier = specifiers[i];
+      let { factory, instance } = this._lookups[specifier];
+      factory.teardown(instance);
+    }
+  }
+
+  defaultTeardown(instance): void {
   }
 
   private buildInjections(specifier: string): Object {
@@ -85,6 +106,13 @@ export default class Container {
 
     return {
       class: factoryDefinition,
+      teardown: (instance) => {
+        if (factoryDefinition.teardown) {
+          factoryDefinition.teardown(instance);
+        } else {
+          this.defaultTeardown(instance);
+        }
+      },
       create(options) {
         let mergedOptions = Object.assign({}, injections, options);
 
