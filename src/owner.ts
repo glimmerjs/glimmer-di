@@ -4,11 +4,11 @@ import { Factory } from './factory';
 // TODO - use symbol
 export const OWNER = '__owner__';
 
-export function getOwner(object: Object): Owner {
+export function getOwner(object: object): Owner {
   return object[OWNER];
 }
 
-export function setOwner(object: Object, owner: Owner): void {
+export function setOwner(object: object, owner: Owner): void {
   object[OWNER] = owner;
 }
 

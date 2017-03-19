@@ -1,10 +1,10 @@
 export interface FactoryDefinition<T> {
-  create(injections?: Object): T;
-  teardown?(instance: Object): void;
+  create(injections?: object): T;
+  teardown?(instance: object): void;
 }
 
 export interface Factory<T> {
   class: FactoryDefinition<T>;
-  create(injections?: Object): T;
+  create(injections?: object): T;
   teardown(instance: any): void;
 }

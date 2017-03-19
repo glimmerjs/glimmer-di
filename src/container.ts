@@ -71,7 +71,7 @@ export default class Container {
     return instance;
   }
 
-  defaultInjections(specifier: string): Object {
+  defaultInjections(specifier: string): object {
     return {};
   }
 
@@ -88,7 +88,7 @@ export default class Container {
   defaultTeardown(instance): void {
   }
 
-  private buildInjections(specifier: string): Object {
+  private buildInjections(specifier: string): object {
     let hash = this.defaultInjections(specifier);
     let injections: Injection[] = this._registry.registeredInjections(specifier);
     let injection: Injection;
