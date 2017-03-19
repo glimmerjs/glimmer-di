@@ -1,6 +1,6 @@
 {
   "name": "@glimmer/di",
-  "version": "0.1.11",
+  "version": "0.2.0",
   "description": "Dependency injection support for Glimmer applications.",
   "contributors": [
     "Dan Gebhardt <dan@cerebris.com>",
