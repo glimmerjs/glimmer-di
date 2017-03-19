@@ -169,6 +169,80 @@ test('#factoryFor - will use a resolver to locate a factory, even if one is regi
   assert.strictEqual(container.factoryFor('foo:bar').class, FooBar, 'factory from resolver was returned');
 });
 
+test('#factoryFor - support teardown with defaultTeardown', function(assert) {
+  let teardowns = [];
+
+  class Foo {
+    static create(options: Object) { return new this(options); }
+    constructor(options: Object) { Object.assign(this, options); }
+  }
+
+  let registry = new Registry();
+  let container = new Container(registry);
+
+  container.defaultTeardown = instance => {
+    teardowns.push(instance);
+  };
+
+  registry.register('thing:foo', Foo);
+
+  let fooFactory = container.factoryFor('thing:foo');
+  let fooInstance = fooFactory.create();
+
+  container.teardown();
+
+  assert.deepEqual(
+    teardowns, [],
+    'no teardown of instances created with factoryFor'
+  );
+
+  fooFactory.teardown(fooInstance);
+
+  assert.deepEqual(
+    teardowns, [fooInstance],
+    'teardown of an instance calls the defaultTeardown hook'
+  );
+});
+
+test('#factoryFor - support teardown with provided teardown', function(assert) {
+  let teardowns = [];
+
+  class Foo {
+    static create(options: Object) { return new this(options); }
+    static teardown(instance: Foo) { teardowns.push(instance); }
+    constructor(options: Object) { Object.assign(this, options); }
+  }
+
+  let registry = new Registry();
+  let container = new Container(registry);
+
+  container.defaultTeardown = instance => {
+    assert.ok(
+      false,
+      'defaultTeardown should not be called when a teardown is provided'
+    );
+  };
+
+  registry.register('thing:foo', Foo);
+
+  let fooFactory = container.factoryFor('thing:foo');
+  let fooInstance = fooFactory.create();
+
+  container.teardown();
+
+  assert.deepEqual(
+    teardowns, [],
+    'no teardown of instances created with factoryFor'
+  );
+
+  fooFactory.teardown(fooInstance);
+
+  assert.deepEqual(
+    teardowns, [fooInstance],
+    'teardown of an instance calls the providede teardown hook'
+  );
+});
+
 test('#lookup - returns an instance created by the factory with a set of default injections', function(assert) {
   assert.expect(3);
 
@@ -351,4 +425,69 @@ test('#lookup - injects references registered by type', function(assert) {
   registry.registerInjection('foo', 'router', 'router:main');
   assert.strictEqual(container.lookup('foo:bar'), instance, 'instance returned');
   assert.strictEqual(instance['router'], router, 'injection has been applied to instance');
+});
+
+test('#lookup - teardown of singleton instances occurs upon teardown', function(assert) {
+  assert.expect(4);
+
+  let foo = {};
+  class Foo {
+    static create() {
+      return foo;
+    }
+    static teardown(instance) {
+      assert.ok(true, 'Foo#teardown invoked');
+      assert.equal(instance, foo, 'foo has teardown');
+    }
+  }
+
+  /* Without teardown */
+  let bar = {};
+  class Bar {
+    static create() {
+      return bar;
+    }
+  }
+
+  let registry = new Registry();
+  let container = new Container(registry);
+
+  container.defaultTeardown = instance => {
+    assert.ok(true, 'container#defaultTeardown invoked');
+    assert.equal(instance, bar, 'bar has teardown');
+  };
+
+  registry.register('thing:foo', Foo);
+  registry.register('thing:bar', Bar);
+
+  container.lookup('thing:foo');
+  container.lookup('thing:bar');
+
+  container.teardown();
+});
+
+test('#lookup - teardown of non-singleton instances does not occurs upon teardown', function(assert) {
+  assert.expect(0);
+
+  class Foo {
+    static create() {
+      return {};
+    }
+    static teardown(instance) {
+      assert.ok(false, 'Foo#teardown invoked');
+    }
+  }
+
+  let registry = new Registry();
+  let container = new Container(registry);
+
+  container.defaultTeardown = () => {
+    assert.ok(false, 'container#defaultTeardown invoked');
+  };
+
+  registry.register('thing:foo', Foo, {singleton: false});
+
+  container.lookup('thing:foo');
+
+  container.teardown();
 });
