@@ -7,7 +7,9 @@ export interface Specifier {
 }
 
 export function isSpecifierStringAbsolute(specifier: string): boolean {
-  let [type, path] = specifier.split(':');
+  let split = specifier.split(':');
+  let type = split[0];
+  let path = split[1];
   return !!(type && path && path.indexOf('/') === 0 && path.split('/').length > 3);
 }
 
@@ -57,7 +59,9 @@ export function deserializeSpecifier(specifier: string): Specifier {
   let obj: Specifier = {};
 
   if (specifier.indexOf(':') > -1) {
-    let [type, path] = specifier.split(':');
+    let split  = specifier.split(':');
+    let type = split[0];
+    let path = split[1];
     obj.type = type;
 
     let pathSegments;
