@@ -97,7 +97,7 @@ export default class Registry implements RegistryAccessor {
   registeredOptions(specifier: string): any {
     let options = this._registeredOptions[specifier];
     if (options === undefined) {
-      let [type] = specifier.split(':');
+      let type = specifier.split(':')[0];
       options = this._registeredOptions[type];
     }
     return options;
@@ -123,7 +123,7 @@ export default class Registry implements RegistryAccessor {
   }
 
   registeredInjections(specifier: string): Injection[] {
-    let [type] = specifier.split(':');
+    let type = specifier.split(':')[0];
     let injections: Injection[] = this._fallback ? this._fallback.registeredInjections(specifier) : [];
     Array.prototype.push.apply(injections, this._registeredInjections[type]);
     Array.prototype.push.apply(injections, this._registeredInjections[specifier]);
