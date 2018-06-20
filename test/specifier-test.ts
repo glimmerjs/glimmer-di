@@ -86,6 +86,17 @@ test('#serializeSpecifier - serializes a Specifier object without a namespace', 
   assert.equal(serializeSpecifier(a), 'component:/app/components/slick-input');
 });
 
+test('#serializeSpecifier - serializes a Specifier object with a scoped rootName', function (assert) {
+  let a: Specifier = {
+    rootName: '@scoped/pkg-name',
+    collection: 'components',
+    name: 'slick-input',
+    type: 'component'
+  };
+
+  assert.equal(serializeSpecifier(a), 'component:/@scoped/pkg-name/components/slick-input');
+});
+
 test('#deserializeSpecifier - deserializes a type-only specifier string into a Serializer object', function(assert) {
   let a = deserializeSpecifier('instance-initializer');
 
@@ -113,6 +124,17 @@ test('#deserializeSpecifier - deserializes a multi-part-namespace specifier stri
     rootName: 'app',
     collection: 'components',
     namespace: 'slick-ui/form/inputs',
+    name: 'slick-input',
+    type: 'component'
+  });
+});
+
+test('#deserializeSpecifier - deserializes a scoped rootName specifier string into a Serializer object', function (assert) {
+  let a = deserializeSpecifier('component:/@scoped/pkg-name/components/slick-input');
+  
+  assert.deepEqual(a, {
+    rootName: '@scoped/pkg-name',
+    collection: 'components',
     name: 'slick-input',
     type: 'component'
   });

@@ -68,7 +68,11 @@ export function deserializeSpecifier(specifier: string): Specifier {
 
     if (path.indexOf('/') === 0) {
       pathSegments = path.substr(1).split('/');
-      obj.rootName = pathSegments.shift();
+      if (path.substr(1).startsWith('@')) {
+        obj.rootName = pathSegments.shift() + '/' + pathSegments.shift();
+      } else {
+        obj.rootName = pathSegments.shift();
+      }
       obj.collection = pathSegments.shift();
     } else {
       pathSegments = path.split('/');
