@@ -86,7 +86,7 @@ test('#serializeSpecifier - serializes a Specifier object without a namespace', 
   assert.equal(serializeSpecifier(a), 'component:/app/components/slick-input');
 });
 
-test('#serializeSpecifier - serializes a specificer object with a scoped rootName', function (assert) {
+test('#serializeSpecifier - serializes a Specifier object with a scoped rootName', function (assert) {
   let a: Specifier = {
     rootName: '@scoped/pkg-name',
     collection: 'components',
@@ -129,7 +129,7 @@ test('#deserializeSpecifier - deserializes a multi-part-namespace specifier stri
   });
 });
 
-test('#deserializeSpecifier - deserialies a scoped rootName specifier string into a Serializer object', function (assert) {
+test('#deserializeSpecifier - deserializes a scoped rootName specifier string into a Serializer object', function (assert) {
   let a = deserializeSpecifier('component:/@scoped/pkg-name/components/slick-input');
   
   assert.deepEqual(a, {
