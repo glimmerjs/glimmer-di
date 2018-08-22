@@ -18,9 +18,8 @@
     "test": "testem ci"
   },
   "devDependencies": {
-    "@glimmer/build": "^0.6.0",
-    "broccoli": "^1.1.0",
-    "broccoli-cli": "^1.0.0",
-    "testem": "^1.13.0"
+    "@glimmer/build": "^0.9.0",
+    "broccoli": "^1.1.4",
+    "broccoli-cli": "^1.0.0"
   }
 }
